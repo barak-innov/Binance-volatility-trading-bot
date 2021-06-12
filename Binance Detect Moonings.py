@@ -28,6 +28,8 @@ import glob
 
 # Needed for colorful console output Install with: python3 -m pip install colorama (Mac/Linux) or pip install colorama (PC)
 from colorama import init
+
+import time
 init()
 
 # needed for the binance API / websockets / Exception handling
@@ -460,7 +462,6 @@ def write_log(logline):
         f.write(timestamp + ' ' + logline + '\n')
 
 if __name__ == '__main__':
-
     # Load arguments then parse settings
     args = parse_args()
     mymodule = {}
@@ -525,7 +526,7 @@ if __name__ == '__main__':
     # this will stop the script from starting, and display a helpful error.
     api_ready, msg = test_api_key(client, BinanceAPIException)
     if api_ready is not True:
-       exit(f'{txcolors.SELL_LOSS}{msg}{txcolors.DEFAULT}')
+        exit(f'{txcolors.SELL_LOSS}{msg}{txcolors.DEFAULT}')
 
     # Use CUSTOM_LIST symbols if CUSTOM_LIST is set to True
     if CUSTOM_LIST: tickers=[line.strip() for line in open(TICKERS_LIST)]
@@ -604,5 +605,10 @@ if __name__ == '__main__':
         except ConnectionError as ce:
             CONNECTION_ERROR_COUNT +=1 
             print(f'{txcolors.WARNING}We got a timeout error from from binance. Going to re-loop. Current Count: {CONNECTION_ERROR_COUNT}\n{ce}{txcolors.DEFAULT}')
+        except Exception as err:
+            print("FATAL ERROR FOR SSH >>>>>>>>>>>>>>>>>>>> " + str(err))
+            print("Restart bot!")
+            time.sleep(5)
+
 
 
